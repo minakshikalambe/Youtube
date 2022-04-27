@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <style>
+    #searchResults{
+        display: grid;
+        grid-template-columns:repeat(4,1fr);
+        text-align: center;
+        font-weight:bold;
+        grid-gap:20px;
+    }
+    #flow{
+        overflow: hidden;
+    }
+    #title{
+        width:100%;
+        height:50px;
+        text-align: center;
+        margin-top:20px;
+    }
+    </style>
+</head>
+<body>
+       <div id="title">
+        <h3>Home</h3>
+    </div>
+        <div id="searchResults"></div>
+</body>
+</html>
+<script>
+    let API_KEY="AIzaSyDL1zqaobnPaQTGxExxE3gRTOCp2-r8UqU"
+    let searchResultDiv=document.getElementById("searchResults")
+    const searchVideo=async()=>{
+        try{
+          
+            let res = await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet&regionCode=IN&chart=mostPopular&maxResults=50&key=${API_KEY}`);
+            let data=await res.json();
+            let videosList=data.items
+            console.log(videosList)
+            displayData(videosList)
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+searchVideo()
+
+    const displayData=(videosArray)=>{
+        searchResultDiv.innerHTML="";
+        videosArray.forEach((video)=>{
+        
+        let videoCard=document.createElement("div")
+        videoCard.setAttribute("id","d")
+       
+        var button_img=document.createElement("button")
+        button_img.addEventListener("click",()=>{
+         play(video.id)
+        });
+        var thumnail=document.createElement("img")
+        thumnail.src=video.snippet.thumbnails.medium.url
+        button_img.append(thumnail)
+        let title=document.createElement("p")
+        title.textContent=video.snippet.title
+        title.setAttribute("id","flow")
+        videoCard.append(button_img,title);
+        searchResultDiv.append(videoCard)
+         });
+    };
+    var cartArr=[];
+    const play=(Id)=>{
+        let x=Id
+        console.log(x)
+       cartArr.push(x);
+     localStorage.setItem("cartItem",JSON.stringify(cartArr));
+     window.location.href = "new.html";
+    }
+</script>
